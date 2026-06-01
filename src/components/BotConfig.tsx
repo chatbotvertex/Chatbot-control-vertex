@@ -65,6 +65,7 @@ export default function BotConfig({ platform, title, description, icon: Icon }: 
         const { data, error } = await supabase
           .from("bot_settings")
           .select("*")
+          .eq("user_id", user!.id)
           .eq("bot_type", "whatsapp")
           .maybeSingle();
         if (error) throw error;
@@ -73,6 +74,7 @@ export default function BotConfig({ platform, title, description, icon: Icon }: 
         const { data, error } = await supabase
           .from("instagram_settings")
           .select("*")
+          .eq("user_id", user!.id)
           .maybeSingle();
         if (error) throw error;
         return data;
@@ -88,13 +90,15 @@ export default function BotConfig({ platform, title, description, icon: Icon }: 
         const { data, error } = await supabase
           .from("bot_schedules")
           .select("*")
+          .eq("user_id", user!.id)
           .eq("bot_type", "whatsapp");
         if (error) throw error;
         return data ?? [];
       } else {
         const { data, error } = await supabase
           .from("instagram_schedules")
-          .select("*");
+          .select("*")
+          .eq("user_id", user!.id);
         if (error) throw error;
         return data ?? [];
       }
@@ -161,12 +165,13 @@ export default function BotConfig({ platform, title, description, icon: Icon }: 
         const { error: settingsErr } = await supabase
           .from("bot_settings")
           .upsert(
-            { bot_type: "whatsapp" as const, is_active: isActive, offline_message: offlineMessage },
-            { onConflict: "bot_type" },
+            { user_id: user!.id, bot_type: "whatsapp" as const, is_active: isActive, offline_message: offlineMessage },
+            { onConflict: "user_id,bot_type" },
           );
         if (settingsErr) throw settingsErr;
 
         const schedRows = DAYS.map((d) => ({
+          user_id: user!.id,
           bot_type: "whatsapp" as const,
           day_of_week: d.value,
           is_active: days[d.value]?.is_active ?? false,
@@ -175,19 +180,19 @@ export default function BotConfig({ platform, title, description, icon: Icon }: 
         }));
         const { error: schedErr } = await supabase
           .from("bot_schedules")
-          .upsert(schedRows, { onConflict: "bot_type,day_of_week" });
+          .upsert(schedRows, { onConflict: "user_id,bot_type,day_of_week" });
         if (schedErr) throw schedErr;
       } else {
-        // singleton=true é a chave de conflito — garante upsert correto
         const { error: settingsErr } = await supabase
           .from("instagram_settings")
           .upsert(
-            { singleton: true, is_active: isActive, offline_message: offlineMessage },
-            { onConflict: "singleton" },
+            { user_id: user!.id, is_active: isActive, offline_message: offlineMessage },
+            { onConflict: "user_id" },
           );
         if (settingsErr) throw settingsErr;
 
         const schedRows = DAYS.map((d) => ({
+          user_id: user!.id,
           day_of_week: d.value,
           is_active: days[d.value]?.is_active ?? false,
           start_time: days[d.value]?.start_time ?? "09:00",
@@ -195,7 +200,7 @@ export default function BotConfig({ platform, title, description, icon: Icon }: 
         }));
         const { error: schedErr } = await supabase
           .from("instagram_schedules")
-          .upsert(schedRows, { onConflict: "day_of_week" });
+          .upsert(schedRows, { onConflict: "user_id,day_of_week" });
         if (schedErr) throw schedErr;
       }
     },

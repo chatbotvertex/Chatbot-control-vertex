@@ -57,6 +57,7 @@ const Index = () => {
       const { data } = await supabase
         .from("bot_settings")
         .select("is_active")
+        .eq("user_id", user!.id)
         .eq("bot_type", "whatsapp")
         .maybeSingle();
       return data;
@@ -70,6 +71,7 @@ const Index = () => {
       const { data } = await supabase
         .from("instagram_settings")
         .select("is_active")
+        .eq("user_id", user!.id)
         .maybeSingle();
       return data;
     },

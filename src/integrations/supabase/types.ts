@@ -12,6 +12,7 @@ export type Database = {
       bot_settings: {
         Row: {
           id: string
+          user_id: string
           bot_type: 'whatsapp' | 'instagram'
           is_active: boolean
           offline_message: string
@@ -20,6 +21,7 @@ export type Database = {
         }
         Insert: {
           id?: string
+          user_id: string
           bot_type: 'whatsapp' | 'instagram'
           is_active?: boolean
           offline_message?: string
@@ -28,6 +30,7 @@ export type Database = {
         }
         Update: {
           id?: string
+          user_id?: string
           bot_type?: 'whatsapp' | 'instagram'
           is_active?: boolean
           offline_message?: string
@@ -39,6 +42,7 @@ export type Database = {
       bot_schedules: {
         Row: {
           id: string
+          user_id: string
           bot_type: 'whatsapp' | 'instagram'
           day_of_week: number
           is_active: boolean
@@ -49,6 +53,7 @@ export type Database = {
         }
         Insert: {
           id?: string
+          user_id: string
           bot_type: 'whatsapp' | 'instagram'
           day_of_week: number
           is_active?: boolean
@@ -59,6 +64,7 @@ export type Database = {
         }
         Update: {
           id?: string
+          user_id?: string
           bot_type?: 'whatsapp' | 'instagram'
           day_of_week?: number
           is_active?: boolean
@@ -72,7 +78,7 @@ export type Database = {
       instagram_settings: {
         Row: {
           id: string
-          singleton: boolean
+          user_id: string
           is_active: boolean
           offline_message: string
           created_at: string
@@ -80,7 +86,7 @@ export type Database = {
         }
         Insert: {
           id?: string
-          singleton?: boolean
+          user_id: string
           is_active?: boolean
           offline_message?: string
           created_at?: string
@@ -88,7 +94,7 @@ export type Database = {
         }
         Update: {
           id?: string
-          singleton?: boolean
+          user_id?: string
           is_active?: boolean
           offline_message?: string
           created_at?: string
@@ -99,6 +105,7 @@ export type Database = {
       instagram_schedules: {
         Row: {
           id: string
+          user_id: string
           day_of_week: number
           is_active: boolean
           start_time: string
@@ -108,6 +115,7 @@ export type Database = {
         }
         Insert: {
           id?: string
+          user_id: string
           day_of_week: number
           is_active?: boolean
           start_time?: string
@@ -117,6 +125,7 @@ export type Database = {
         }
         Update: {
           id?: string
+          user_id?: string
           day_of_week?: number
           is_active?: boolean
           start_time?: string
